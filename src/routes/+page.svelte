@@ -2,7 +2,18 @@
   import '../global.css'
   import { onMount } from 'svelte';
   import { msToTime } from '../lib/utils'
-  // const colors = ['#e0053c', '#f25b36', '#e88d23', '#aca138', '#3e9853', '#178d84']
+  const colors = [
+    '#e0053c',
+    '#f25b36',
+    '#e88d23',
+    '#aca138',
+    '#3e9853',
+    '#178d84',
+    '#3e9853',
+    '#aca138',
+    '#e88d23',
+    '#f25b36',
+  ]
 
   let timers: Array<{
     start: Date,
@@ -87,7 +98,7 @@
   {#if timers.length}
     <div class="timers">
       {#each timers as timer, id}
-        <div class="timer {interval === timer.interval ? 'current' : ''}">
+        <div style={`border-left: 2px solid ${colors[id % colors.length]}`} class="timer {interval === timer.interval ? 'current' : ''}">
           <div class="time">
             {msToTime(timer.diff)}
           </div>
@@ -123,10 +134,6 @@
   }
 
   .timer.current {
-    display: flex;
-    align-items: stretch;
-    justify-content: space-between;
-    border-bottom: 1px solid #00000024;
     background-color: #00000024;
   }
 
