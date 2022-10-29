@@ -9,12 +9,14 @@
     interval: number,
   }> = []
   let interval = 0
+  let total = 0
 
   onMount(() => {
     if (localStorage.length) {
       Object.keys(localStorage).forEach(key => {
         timers = [...timers, JSON.parse(localStorage[key])]
       })
+      total = timers.reduce((prev, timer) => prev + timer.diff, 0)
     }
   })
 
@@ -26,6 +28,8 @@
     timers[timerId] = {...timer, diff}
 
     localStorage.setItem(`timer-${timerId}`, `${JSON.stringify(timer)}`)
+
+    total = timers.reduce((prev, timer) => prev + timer.diff, 0)
 	}
 
   const startTimer = (id: number | void) => {
@@ -98,6 +102,8 @@
     <button on:click={() => startTimer()}>Start new timer</button>
     <button on:click={removeAll}>Delete all</button>
   </p>
+
+  <p>{msToTime(total)}</p>
 </main>
 
 <style>
