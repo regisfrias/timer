@@ -56,6 +56,14 @@
     updateDate(timerId)
   }
 
+  const onNameChange = (evt: Event) => {
+    const target = (evt.target as HTMLInputElement)
+    const timerId = target.dataset.timerId ? parseInt(target.dataset.timerId) : 0
+    const timer = timers[timerId]
+    timer.name = target.value
+    localStorage.setItem(`timer-${timerId}`, `${JSON.stringify(timer)}`)
+  }
+
   const removeAll = () => {
     localStorage.clear()
     timers = []
@@ -75,11 +83,11 @@
       {#each timers as timer, id}
         <div class="timer">
           {msToTime(timer.diff)}
-          <input data-timer-id={id} type="text" name="" id="" bind:value={timer.name} placeholder="Name" />
+          <input data-timer-id={id} type="text" name="" id="" bind:value={timer.name} on:keyup={onNameChange} placeholder="Timer name" />
           {#if interval === timer.interval}
-            <button data-timer-id={id} on:click={stopTimer}>Stop</button>
+            <button class="play_pause" data-timer-id={id} on:click={stopTimer}>■</button>
           {:else}
-            <button data-timer-id={id} on:click={() => startTimer(id)}>Resume</button>
+            <button class="play_pause" data-timer-id={id} on:click={() => startTimer(id)}>►</button>
           {/if}
         </div>
       {/each}
@@ -91,3 +99,40 @@
     <button on:click={removeAll}>Delete all</button>
   </p>
 </main>
+
+<style>
+  .timer {
+    display: flex;
+    margin: 0.2rem;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .timer input {
+    display: block;
+    min-height: 1.6rem;
+    line-height: 1;
+    margin: 0;
+    padding: 0.2rem;
+    border: 1px solid transparent;
+    background-color: rgb(248, 248, 248);
+  }
+
+  .timer input:focus {
+    outline: 0;
+    border: 1px solid rgb(208, 208, 208);
+    background-color: rgb(239, 239, 239);
+  }
+
+  button {
+    height: 2rem;
+    border: 0;
+    background-color: rgb(160, 197, 230);
+  }
+
+  .play_pause {
+    font-size: 1rem;
+    line-height: 1;
+    width: 2rem;
+  }
+</style>
