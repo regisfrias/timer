@@ -1,6 +1,8 @@
 <script lang="ts">
+  import '../global.css'
   import { onMount } from 'svelte';
   import { msToTime } from '../lib/utils'
+  // const colors = ['#e0053c', '#f25b36', '#e88d23', '#aca138', '#3e9853', '#178d84']
 
   let timers: Array<{
     start: Date,
@@ -13,7 +15,7 @@
 
   onMount(() => {
     if (localStorage.length) {
-      Object.keys(localStorage).forEach(key => {
+      Object.keys(localStorage).sort().forEach(key => {
         timers = [...timers, JSON.parse(localStorage[key])]
       })
       total = timers.reduce((prev, timer) => prev + timer.diff, 0)
@@ -98,12 +100,12 @@
     </div>
   {/if}
 
-  <p>
+  <p class="controls">
     <button on:click={() => startTimer()}>Start new timer</button>
     <button on:click={removeAll}>Delete all</button>
   </p>
 
-  <p>{msToTime(total)}</p>
+  <p class="total">{msToTime(total)}</p>
 </main>
 
 <style>
@@ -121,24 +123,27 @@
     margin: 0;
     padding: 0.2rem;
     border: 1px solid transparent;
-    background-color: rgb(248, 248, 248);
+    background-color: transparent;
+    color: white;
   }
 
   .timer input:focus {
     outline: 0;
-    border: 1px solid rgb(208, 208, 208);
-    background-color: rgb(239, 239, 239);
-  }
-
-  button {
-    height: 2rem;
-    border: 0;
-    background-color: rgb(160, 197, 230);
+    background-color: rgba(255, 255, 255, 0.1);
   }
 
   .play_pause {
     font-size: 1rem;
     line-height: 1;
     width: 2rem;
+  }
+
+  .controls {
+    display: flex;
+  }
+
+  .total {
+    text-align: center;
+    font-size: 2rem;
   }
 </style>

@@ -1,0 +1,12 @@
+body {
+  background-color: #364352;
+  color: white;
+  font-family: 'Helvetica', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+button {
+  height: 2rem;
+  border: 0;
+  background-color: #f36c53;
+  color: white;
+}
