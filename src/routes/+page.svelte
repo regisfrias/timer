@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { msToTime } from '../lib/utils'
 
   let timers: Array<{
@@ -9,12 +10,22 @@
   }> = []
   let interval = 0
 
+  onMount(() => {
+    if (localStorage.length) {
+      Object.keys(localStorage).forEach(key => {
+        timers = [...timers, JSON.parse(localStorage[key])]
+      })
+    }
+  })
+
 	const updateDate = (timerId: number) => {
     const current = new Date()
     const timer = timers[timerId]
     const start = timer.start
 		const diff = (current.getTime() - start.getTime())
     timers[timerId] = {...timer, diff}
+
+    localStorage.setItem(`timer-${timerId}`, `${JSON.stringify(timer)}`)
 	}
 
   const startTimer = (id: number | void) => {
@@ -45,6 +56,11 @@
     updateDate(timerId)
   }
 
+  const removeAll = () => {
+    localStorage.clear()
+    timers = []
+  }
+
   const stopTimer = () => {
     window.clearInterval(interval)
     interval = 0
@@ -70,5 +86,8 @@
     </div>
   {/if}
 
-  <button on:click={() => startTimer()}>Start new timer</button>
+  <p>
+    <button on:click={() => startTimer()}>Start new timer</button>
+    <button on:click={removeAll}>Delete all</button>
+  </p>
 </main>
