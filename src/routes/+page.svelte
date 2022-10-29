@@ -99,16 +99,19 @@
       {/each}
     </div>
   {/if}
-
-  <p class="controls">
-    <button on:click={() => startTimer()}>Start new timer</button>
-    <button on:click={removeAll}>Delete all</button>
-  </p>
-
-  <p class="total">{msToTime(total)}</p>
 </main>
 
+<footer class="footer">
+  <button on:click={() => startTimer()}>Start new timer</button>
+  <div class="total">{msToTime(total)}</div>
+  <button on:click={removeAll}>Delete all</button>
+</footer>
+
 <style>
+  h1 {
+    text-align: center;
+  }
+
   .timer {
     display: flex;
     margin: 0.2rem;
@@ -138,12 +141,24 @@
     width: 2rem;
   }
 
-  .controls {
-    display: flex;
-  }
-
   .total {
     text-align: center;
     font-size: 2rem;
   }
+
+
+  .footer {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    align-items: center;
+    background-color: var(--background);
+    position: fixed;
+    bottom: 0;
+    width: calc(100% - var(--padding) * 2);
+    padding: var(--padding_sm) var(--padding);
+    box-shadow: 1px -1px 24px 0px rgba(0,0,0,0.2);
+    -webkit-box-shadow: 1px -1px 24px 0px rgba(0,0,0,0.2);
+    -moz-box-shadow: 1px -1px 24px 0px rgba(0,0,0,0.2);
+  }
+
 </style>

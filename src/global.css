@@ -1,12 +1,30 @@
+:root {
+  --background: #364352;
+  --accent: #f36c53;
+  --white: white;
+  --padding: 30px;
+  --padding_sm: 15px;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
 body {
-  background-color: #364352;
+  background-color: var(--background);
   color: white;
   font-family: 'Helvetica', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+main {
+  padding: 1px var(--padding) 160px;
 }
 
 button {
   height: 2rem;
   border: 0;
-  background-color: #f36c53;
-  color: white;
+  background-color: var(--accent);
+  color: var(--white);
 }
