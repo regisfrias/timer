@@ -1,6 +1,7 @@
 :root {
   --background: #364352;
   --accent: #f36c53;
+  --accent_dark: #cc5945;
   --white: white;
   --padding: 30px;
   --padding_sm: 15px;
@@ -23,8 +24,12 @@ main {
 }
 
 button {
-  height: 2rem;
   border: 0;
   background-color: var(--accent);
   color: var(--white);
+  cursor: pointer;
+}
+
+button.active {
+  background-color: var(--accent_dark);
 }

@@ -87,11 +87,13 @@
   {#if timers.length}
     <div class="timers">
       {#each timers as timer, id}
-        <div class="timer">
-          {msToTime(timer.diff)}
+        <div class="timer {interval === timer.interval ? 'current' : ''}">
+          <div class="time">
+            {msToTime(timer.diff)}
+          </div>
           <input data-timer-id={id} type="text" name="" id="" bind:value={timer.name} on:keyup={onNameChange} placeholder="Timer name" />
           {#if interval === timer.interval}
-            <button class="play_pause" data-timer-id={id} on:click={stopTimer}>■</button>
+            <button class="play_pause active" data-timer-id={id} on:click={stopTimer}>■</button>
           {:else}
             <button class="play_pause" data-timer-id={id} on:click={() => startTimer(id)}>►</button>
           {/if}
@@ -114,9 +116,18 @@
 
   .timer {
     display: flex;
-    margin: 0.2rem;
-    align-items: center;
+    align-items: stretch;
     justify-content: space-between;
+    border-bottom: 1px solid #00000024;
+    padding-left: var(--padding_sm);
+  }
+
+  .timer.current {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    border-bottom: 1px solid #00000024;
+    background-color: #00000024;
   }
 
   .timer input {
@@ -124,7 +135,7 @@
     min-height: 1.6rem;
     line-height: 1;
     margin: 0;
-    padding: 0.2rem;
+    padding: 0.5rem;
     border: 1px solid transparent;
     background-color: transparent;
     color: white;
@@ -135,10 +146,14 @@
     background-color: rgba(255, 255, 255, 0.1);
   }
 
+  .time {
+    display: flex;
+    align-items: center;
+  }
+
   .play_pause {
     font-size: 1rem;
-    line-height: 1;
-    width: 2rem;
+    width: 3rem;
   }
 
   .total {
@@ -146,11 +161,10 @@
     font-size: 2rem;
   }
 
-
   .footer {
     display: grid;
     grid-template-columns: 1fr 2fr 1fr;
-    align-items: center;
+    align-items: stretch;
     background-color: var(--background);
     position: fixed;
     bottom: 0;
