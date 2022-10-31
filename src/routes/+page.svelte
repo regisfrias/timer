@@ -99,10 +99,10 @@
     <div class="timers">
       {#each timers as timer, id}
         <div style={`border-left: 2px solid ${colors[id % colors.length]}`} class="timer {interval === timer.interval ? 'current' : ''}">
+          <input class="timer-name" data-timer-id={id} type="text" name="" id="" bind:value={timer.name} on:keyup={onNameChange} placeholder="Timer name" />
           <div class="time">
             {msToTime(timer.diff)}
           </div>
-          <input data-timer-id={id} type="text" name="" id="" bind:value={timer.name} on:keyup={onNameChange} placeholder="Timer name" />
           {#if interval === timer.interval}
             <button class="play_pause active" data-timer-id={id} on:click={stopTimer}>■</button>
           {:else}
@@ -125,16 +125,23 @@
     text-align: center;
   }
 
+  .timers {
+    max-width: 100%;
+  }
+
   .timer {
     display: flex;
     align-items: stretch;
     justify-content: space-between;
     border-bottom: 1px solid #00000024;
-    padding-left: var(--padding_sm);
   }
 
   .timer.current {
     background-color: #00000024;
+  }
+
+  .timer-name {
+    max-width: 34%;
   }
 
   .timer input {
@@ -150,12 +157,14 @@
 
   .timer input:focus {
     outline: 0;
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.05);
   }
 
   .time {
     display: flex;
     align-items: center;
+    margin: 0 var(--padding_sm);
+    flex-grow: 1;
   }
 
   .play_pause {
