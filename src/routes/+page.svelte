@@ -118,9 +118,8 @@
   {#if allTimers && Object.keys(allTimers).length}
     <article class="allTimers">
       {#each Object.keys(allTimers) as thisDay}
-        {#if todaysKey === thisDay }
-          <h2>Today</h2>
-        {/if}
+        <h2 class="timers-title">{#if todaysKey === thisDay}<span>Today</span>{/if}<span>{`${today.getDay()}.${today.getMonth()}.${today.getFullYear()}`}</span></h2>
+
         {#each allTimers[thisDay].timers as timer, id}
           <div style={`border-left: 2px solid ${colors[id % colors.length]}`} class="timer {interval === timer.interval ? 'current' : ''}">
             <input class="timer-name" data-timer-id={id} data-timer-day={thisDay} type="text" name="" id="" bind:value={timer.name} on:keyup={onNameChange} placeholder="Timer name" />
@@ -134,6 +133,10 @@
             {/if}
           </div>
         {/each}
+        <div class="total">
+          <div>Total</div>
+          <div>{msToTime(allTimers[thisDay].total)}</div>
+        </div>
       {/each}
     </article>
   {/if}
@@ -154,9 +157,9 @@
   }
 
   .timer {
-    display: flex;
-    align-items: stretch;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr 1fr 3rem;
+    grid-column-gap: var(--padding_sm);
     border-bottom: 1px solid #00000024;
   }
 
@@ -164,13 +167,15 @@
     background-color: #00000024;
   }
 
-  .timer-name {
-    max-width: 34%;
+  .timers-title {
+    display: flex;
+    justify-content: space-between;
   }
 
   .timer input {
     display: block;
     min-height: 1.6rem;
+    min-width: calc(120px - 1rem);
     line-height: 1;
     margin: 0;
     padding: 0.5rem;
@@ -187,13 +192,25 @@
   .time {
     display: flex;
     align-items: center;
-    margin: 0 var(--padding_sm);
-    flex-grow: 1;
   }
 
   .play_pause {
     font-size: 1rem;
     width: 3rem;
+  }
+
+  .total {
+    display: grid;
+    grid-template-columns: 1fr 1fr 3rem;
+    grid-column-gap: var(--padding_sm);
+  }
+
+  .total div {
+    padding: var(--padding_sm) 0;
+  }
+  .total div:first-child {
+    padding-left: 0.5rem;
+    min-width: calc(120px - 0.5rem);
   }
 
   .footer {
