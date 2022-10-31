@@ -15,75 +15,95 @@
     '#f25b36',
   ]
 
-  let timers: Array<{
-    start: Date,
-    diff: number,
-    name: string,
-    interval: number,
-  }> = []
+  interface timerType {
+    start: string
+    diff: number
+    name: string
+    interval: number
+  }
+
+  interface timersType {
+    [date: string]: {
+      timers: timerType[] | []
+      total: number
+      date: Date
+    }
+  }
+
+  let today: Date = new Date()
+  let todaysKey = today.toISOString().substring(0, 10)
+  let allTimers: timersType = {[todaysKey]: {
+    timers: [],
+    total: 0,
+    date: today
+  }}
   let interval = 0
-  let total = 0
 
   onMount(() => {
-    if (localStorage.length) {
-      Object.keys(localStorage).sort().forEach(key => {
-        timers = [...timers, JSON.parse(localStorage[key])]
-      })
-      total = timers.reduce((prev, timer) => prev + timer.diff, 0)
+    if (localStorage.timers) {
+      const timers = JSON.parse(localStorage.timers)
+      if (Object.keys(timers).length) {
+        allTimers = timers
+      }
     }
   })
 
-	const updateDate = (timerId: number) => {
+	const updateDate = (timerDate: string, timerId: number) => {
     const current = new Date()
-    const timer = timers[timerId]
-    const start = timer.start
+    const timer = allTimers[timerDate].timers[timerId]
+    const start = new Date(timer.start)
 		const diff = (current.getTime() - start.getTime())
-    timers[timerId] = {...timer, diff}
+    const total = (allTimers[timerDate].timers as timerType[]).reduce((prev, timer) => prev + timer.diff, 0)
+    allTimers[timerDate].timers[timerId] = {...timer, diff}
+    allTimers[timerDate].total = total
 
-    localStorage.setItem(`timer-${timerId}`, `${JSON.stringify(timer)}`)
-
-    total = timers.reduce((prev, timer) => prev + timer.diff, 0)
+    localStorage.setItem('timers', JSON.stringify(allTimers))
 	}
 
-  const startTimer = (id: number | void) => {
-    const isNew = id === undefined
-    const timerId = isNew ? timers.length : id
-    const timer = timers[timerId]
+  const startTimer = (evt: Event) => {
+    const target = evt.target as HTMLInputElement
+    const timerId = target.dataset.timerId ? parseInt(target.dataset.timerId) : 0
+    const todaysKey = target.dataset.timerDay || ''
+    const start = new Date()
 
     if (interval) {
       window.clearInterval(interval);
     }
+    interval = window.setInterval(() => updateDate(todaysKey, timerId), 1000)
 
-    const start = new Date()
-    interval = window.setInterval(() => updateDate(timerId), 1000)
+    const newTimer = {
+      start: start.toISOString(),
+      diff: 0,
+      name: '',
+      interval,
+    }
 
-    if (isNew) {
-      timers = [...timers, {
-        start,
-        diff: 0,
-        name: '',
-        interval,
-      }]
+    if (allTimers[todaysKey].timers.length === timerId) {
+      allTimers[todaysKey] = {
+        ...allTimers[todaysKey],
+        timers: [
+          ...allTimers[todaysKey].timers,
+          newTimer
+        ]
+      }
     } else {
-      const newStart = new Date(start.getTime() - timer.diff)
-      timer.start = newStart
-      timer.interval = interval
+      const newStart = new Date(start.getTime() - allTimers[todaysKey].timers[timerId].diff)
+      allTimers[todaysKey].timers.splice(timerId, 1, {
+        start: newStart.toISOString(),
+        diff: allTimers[todaysKey].timers[timerId].diff,
+        name: allTimers[todaysKey].timers[timerId].name,
+        interval,
+      })
     }
     
-    updateDate(timerId)
+    updateDate(todaysKey, timerId)
   }
 
-  const onNameChange = (evt: Event) => {
-    const target = (evt.target as HTMLInputElement)
-    const timerId = target.dataset.timerId ? parseInt(target.dataset.timerId) : 0
-    const timer = timers[timerId]
-    timer.name = target.value
-    localStorage.setItem(`timer-${timerId}`, `${JSON.stringify(timer)}`)
-  }
+  const onNameChange = () => localStorage.setItem(`timers`, `${JSON.stringify(allTimers)}`)
 
   const removeAll = () => {
     localStorage.clear()
-    timers = []
+    allTimers = {}
   }
 
   const stopTimer = () => {
@@ -95,28 +115,32 @@
 <main>
   <h1>Simple Timer</h1>
 
-  {#if timers.length}
-    <div class="timers">
-      {#each timers as timer, id}
-        <div style={`border-left: 2px solid ${colors[id % colors.length]}`} class="timer {interval === timer.interval ? 'current' : ''}">
-          <input class="timer-name" data-timer-id={id} type="text" name="" id="" bind:value={timer.name} on:keyup={onNameChange} placeholder="Timer name" />
-          <div class="time">
-            {msToTime(timer.diff)}
+  {#if allTimers && Object.keys(allTimers).length}
+    <article class="allTimers">
+      {#each Object.keys(allTimers) as thisDay}
+        {#if todaysKey === thisDay }
+          <h2>Today</h2>
+        {/if}
+        {#each allTimers[thisDay].timers as timer, id}
+          <div style={`border-left: 2px solid ${colors[id % colors.length]}`} class="timer {interval === timer.interval ? 'current' : ''}">
+            <input class="timer-name" data-timer-id={id} data-timer-day={thisDay} type="text" name="" id="" bind:value={timer.name} on:keyup={onNameChange} placeholder="Timer name" />
+            <div class="time">
+              {msToTime(timer.diff)}
+            </div>
+            {#if interval === timer.interval}
+              <button class="play_pause active" data-timer-id={id} on:click={stopTimer}>■</button>
+            {:else}
+              <button class="play_pause" data-timer-id={id} data-timer-day={thisDay} on:click={startTimer}>►</button>
+            {/if}
           </div>
-          {#if interval === timer.interval}
-            <button class="play_pause active" data-timer-id={id} on:click={stopTimer}>■</button>
-          {:else}
-            <button class="play_pause" data-timer-id={id} on:click={() => startTimer(id)}>►</button>
-          {/if}
-        </div>
+        {/each}
       {/each}
-    </div>
+    </article>
   {/if}
 </main>
 
 <footer class="footer">
-  <button on:click={() => startTimer()}>Start new timer</button>
-  <div class="total">{msToTime(total)}</div>
+  <button on:click={startTimer} data-timer-id={allTimers[todaysKey] && allTimers[todaysKey].timers ? Object.keys(allTimers[todaysKey].timers).length : 0} data-timer-day={todaysKey}>Start new timer</button>
   <button on:click={removeAll}>Delete all</button>
 </footer>
 
@@ -125,7 +149,7 @@
     text-align: center;
   }
 
-  .timers {
+  .allTimers {
     max-width: 100%;
   }
 
@@ -172,14 +196,10 @@
     width: 3rem;
   }
 
-  .total {
-    text-align: center;
-    font-size: 2rem;
-  }
-
   .footer {
     display: grid;
-    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: var(--padding);
     align-items: stretch;
     background-color: var(--background);
     position: fixed;
