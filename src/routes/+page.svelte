@@ -249,13 +249,9 @@
     transition: background-color var(--fast);
   }
 
-  .timer input:hover {
-    background-color: rgba(255, 255, 255, 0.05);
-  }
-
-  .timer input:focus {
+  .timer input:hover, .timer input:focus {
     outline: 0;
-    background-color: rgba(255, 255, 255, 0.05);
+    background-color: var(--background_light);
   }
 
   .time {
