@@ -25,6 +25,16 @@ main {
   padding: 1px var(--padding) 160px;
 }
 
+.wrapper {
+  max-width: 500px;
+  margin: auto;
+}
+
+.wraper {
+  max-width: 600px;
+  margin: auto;
+}
+
 button {
   border: 0;
   background-color: var(--accent);

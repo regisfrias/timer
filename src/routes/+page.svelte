@@ -46,10 +46,6 @@
         allTimers = timers
       }
     }
-
-    Object.keys(allTimers).reverse().map(key => {
-      console.log('key', new Date(allTimers[key].date).getDay());
-    })
   })
 
 	const updateDate = (timerDate: string, timerId: number) => {
@@ -122,7 +118,7 @@
   }
 </script>
 
-<main>
+<main class="wrapper">
   <h1>Simple Timer</h1>
 
   {#if allTimers && Object.keys(allTimers).length}
@@ -153,8 +149,10 @@
 </main>
 
 <footer class="footer">
-  <button on:click={startTimer} data-timer-id={allTimers[todaysKey] && allTimers[todaysKey].timers ? Object.keys(allTimers[todaysKey].timers).length : 0} data-timer-day={todaysKey}>Start new timer</button>
-  <button on:click={removeAll}>Delete all</button>
+  <div class="wrapper">
+    <button on:click={startTimer} data-timer-id={allTimers[todaysKey] && allTimers[todaysKey].timers ? Object.keys(allTimers[todaysKey].timers).length : 0} data-timer-day={todaysKey}>Start new timer</button>
+    <button on:click={removeAll}>Delete all</button>
+  </div>
 </footer>
 
 <style>
@@ -233,18 +231,20 @@
   }
 
   .footer {
+    position: fixed;
+    bottom: 0;
+    box-shadow: 1px -1px 24px 0px rgba(0,0,0,0.2);
+    padding: var(--padding_sm) var(--padding);
+    width: calc(100% - var(--padding) * 2);
+    -webkit-box-shadow: 1px -1px 24px 0px rgba(0,0,0,0.2);
+    -moz-box-shadow: 1px -1px 24px 0px rgba(0,0,0,0.2);
+  }
+  .footer .wrapper {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-column-gap: var(--padding);
     align-items: stretch;
     background-color: var(--background);
-    position: fixed;
-    bottom: 0;
-    width: calc(100% - var(--padding) * 2);
-    padding: var(--padding_sm) var(--padding);
-    box-shadow: 1px -1px 24px 0px rgba(0,0,0,0.2);
-    -webkit-box-shadow: 1px -1px 24px 0px rgba(0,0,0,0.2);
-    -moz-box-shadow: 1px -1px 24px 0px rgba(0,0,0,0.2);
   }
 
 </style>
