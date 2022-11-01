@@ -146,7 +146,7 @@
 </script>
 
 <main class="wrapper">
-  <h1>Simple Timer</h1>
+  <h1>Working Hours Timer</h1>
 
   {#if allTimers && Object.keys(allTimers).length}
     <article class="allTimers">
@@ -203,8 +203,13 @@
 
 <footer class="footer">
   <div class="wrapper">
-    <button on:click={startTimer} data-timer-id={allTimers[todaysKey] && allTimers[todaysKey].timers ? Object.keys(allTimers[todaysKey].timers).length : 0} data-timer-day={todaysKey}>Start new timer</button>
-    <button on:click={removeAll}>Delete all</button>
+    <div class="buttons">
+      <button on:click={startTimer} data-timer-id={allTimers[todaysKey] && allTimers[todaysKey].timers ? Object.keys(allTimers[todaysKey].timers).length : 0} data-timer-day={todaysKey}>Start new timer</button>
+      <button on:click={removeAll}>Delete all</button>
+    </div>
+  </div>
+  <div class="wrapper">
+    <p><a href="/privacy">Privacy</a></p>
   </div>
 </footer>
 
@@ -316,13 +321,14 @@
   .footer {
     position: fixed;
     bottom: 0;
+    text-align: center;
     box-shadow: 1px -1px 24px 0px rgba(0,0,0,0.2);
-    padding: var(--padding_sm) var(--padding);
+    padding: var(--padding) var(--padding) var(--padding_sm);
     width: calc(100% - var(--padding) * 2);
     -webkit-box-shadow: 1px -1px 24px 0px rgba(0,0,0,0.2);
     -moz-box-shadow: 1px -1px 24px 0px rgba(0,0,0,0.2);
   }
-  .footer .wrapper {
+  .footer .wrapper .buttons {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-column-gap: var(--padding);

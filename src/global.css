@@ -29,6 +29,10 @@ body {
   font-variation-settings: "wght" 200;
 }
 
+a {
+  color: var(--accent);
+}
+
 strong {
   font-weight: 500;
   font-variation-settings: "wght" 500;
@@ -63,14 +67,17 @@ input {
   font-size: 1rem;
 }
 
-button {
+button, .button {
+  display: inline-block;
   border: 0;
+  padding: var(--padding_sm);
   background-color: var(--accent);
   color: var(--white);
   cursor: pointer;
+  text-decoration: none;
 }
 
-button.active {
+button.active, .button.active {
   background-color: var(--white);
   color: var(--black);
 }
