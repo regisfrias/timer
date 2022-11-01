@@ -1,7 +1,7 @@
 <script lang="ts">
   import '../global.css'
   import { onMount } from 'svelte';
-  import { msToTime } from '../lib/utils'
+  import { msToTime, msToTimeObj, pad } from '../lib/utils'
   const colors = [
     '#e0053c',
     '#f25b36',
@@ -39,6 +39,8 @@
   }}
   let interval = 0
 
+  const save = () => localStorage.setItem('timers', JSON.stringify(allTimers))
+
   onMount(() => {
     if (localStorage.timers) {
       const timers = JSON.parse(localStorage.timers)
@@ -56,8 +58,7 @@
     const total = (allTimers[timerDate].timers as timerType[]).reduce((prev, timer) => prev + timer.diff, 0)
     allTimers[timerDate].timers[timerId] = {...timer, diff}
     allTimers[timerDate].total = total
-
-    localStorage.setItem('timers', JSON.stringify(allTimers))
+    save()
 	}
 
   const startTimer = (evt: Event) => {
@@ -105,7 +106,7 @@
     updateDate(todaysKey, timerId)
   }
 
-  const onNameChange = () => localStorage.setItem(`timers`, `${JSON.stringify(allTimers)}`)
+  // const onNameChange = () => localStorage.setItem(`timers`, `${JSON.stringify(allTimers)}`)
 
   const removeAll = () => {
     localStorage.clear()
@@ -115,6 +116,27 @@
   const stopTimer = () => {
     window.clearInterval(interval)
     interval = 0
+  }
+
+  const onChangeTime = (evt: Event, timerId: number, thisDay: string) => {
+    const target = evt.target as HTMLInputElement
+    const value = parseInt(target.value)
+    const thisDate = new Date(allTimers[thisDay].timers[timerId].diff)
+    switch (target.name) {
+      case 'hrs':
+        thisDate.setHours(value)
+        break;
+      case 'mins':
+        thisDate.setMinutes(value)
+        break;
+      case 'secs':
+        thisDate.setSeconds(value)
+        break;
+      default:
+        break;
+    }
+    allTimers[thisDay].timers[timerId].diff = thisDate.getTime()
+    save()
   }
 </script>
 
@@ -126,16 +148,42 @@
       {#each Object.keys(allTimers).reverse() as thisDay}
         {@const date = new Date(allTimers[thisDay].date)}
         <h2 class="timers-title"><span>{#if todaysKey === thisDay}Today{:else}{date.toLocaleString('en-FI', { weekday: 'long',})}{/if}</span><span>{`${date.getDay()}.${date.getMonth()}.${date.getFullYear()}`}</span></h2>
-        {#each allTimers[thisDay].timers as timer, id}
-          <div style={`border-right: 2px solid ${colors[id % colors.length]}`} class="timer {interval === timer.interval ? 'current' : ''}">
+        {#each allTimers[thisDay].timers as timer, timerId}
+          <div style={`border-right: 2px solid ${colors[timerId % colors.length]}`} class="timer {interval === timer.interval ? 'current' : ''}">
             {#if interval === timer.interval}
-              <button class="play_pause active" data-timer-id={id} on:click={stopTimer}>■</button>
+              <button class="play_pause active" data-timer-id={timerId} on:click={stopTimer}>■</button>
             {:else}
-              <button style={`background-color: ${colors[id % colors.length]}`} class="play_pause" data-timer-id={id} data-timer-day={thisDay} on:click={startTimer}>►</button>
+              <button style={`background-color: ${colors[timerId % colors.length]}`} class="play_pause" data-timer-id={timerId} data-timer-day={thisDay} on:click={startTimer}>►</button>
             {/if}
-            <input class="timer-name" data-timer-id={id} data-timer-day={thisDay} type="text" name="" id="" bind:value={timer.name} on:keyup={onNameChange} placeholder="Timer name" />
+            <input class="timer-name" data-timer-id={timerId} data-timer-day={thisDay} type="text" name="" id="" bind:value={timer.name} on:keyup={save} placeholder="Timer name" />
             <div class="time">
-              {msToTime(timer.diff)}
+              <input
+                on:change={evt => onChangeTime(evt, timerId, thisDay)}
+                type="number"
+                name="hrs"
+                id=""
+                max="24"
+                min="0"
+                value={pad(msToTimeObj(timer.diff).hrs)}
+              >:
+              <input
+                on:change={evt => onChangeTime(evt, timerId, thisDay)}
+                type="number"
+                name="mins"
+                id=""
+                max="60"
+                min="0"
+                value={pad(msToTimeObj(timer.diff).mins)}
+              >:
+              <input
+                on:change={evt => onChangeTime(evt, timerId, thisDay)}
+                type="number"
+                name="secs"
+                id=""
+                max="60"
+                min="0"
+                value={pad(msToTimeObj(timer.diff).secs)}
+              >
             </div>
           </div>
         {/each}
@@ -205,6 +253,30 @@
   .time {
     display: flex;
     align-items: center;
+  }
+
+  .time input {
+    max-width: 3rem;
+    width: 1rem;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .time input:not(:first-child) {
+    margin-left: 1px;
+  }
+
+  /* Chrome, Safari, Edge, Opera */
+  .time input::-webkit-outer-spin-button,
+  .time input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Firefox */
+  .time input[type=number] {
+    -moz-appearance: textfield;
   }
 
   .play_pause {
