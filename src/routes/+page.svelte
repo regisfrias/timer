@@ -46,6 +46,10 @@
         allTimers = timers
       }
     }
+
+    Object.keys(allTimers).reverse().map(key => {
+      console.log('key', new Date(allTimers[key].date).getDay());
+    })
   })
 
 	const updateDate = (timerDate: string, timerId: number) => {
@@ -124,8 +128,8 @@
   {#if allTimers && Object.keys(allTimers).length}
     <article class="allTimers">
       {#each Object.keys(allTimers).reverse() as thisDay}
-        <h2 class="timers-title">{#if todaysKey === thisDay}<span>Today</span>{/if}<span>{`${today.getDay()}.${today.getMonth()}.${today.getFullYear()}`}</span></h2>
-
+        {@const date = new Date(allTimers[thisDay].date)}
+        <h2 class="timers-title"><span>{#if todaysKey === thisDay}Today{:else}{date.toLocaleString('en-FI', { weekday: 'long',})}{/if}</span><span>{`${date.getDay()}.${date.getMonth()}.${date.getFullYear()}`}</span></h2>
         {#each allTimers[thisDay].timers as timer, id}
           <div style={`border-right: 2px solid ${colors[id % colors.length]}`} class="timer {interval === timer.interval ? 'current' : ''}">
             {#if interval === timer.interval}
@@ -162,6 +166,11 @@
     max-width: 100%;
   }
 
+  .timers-title {
+    display: flex;
+    justify-content: space-between;
+  }
+
   .timer {
     display: grid;
     grid-template-columns: 3rem 1fr 1fr;
@@ -171,11 +180,6 @@
 
   .timer.current {
     background-color: #00000024;
-  }
-
-  .timers-title {
-    display: flex;
-    justify-content: space-between;
   }
 
   .timer input {
@@ -188,6 +192,11 @@
     border: 1px solid transparent;
     background-color: transparent;
     color: white;
+    transition: background-color var(--fast);
+  }
+
+  .timer input:hover {
+    background-color: rgba(255, 255, 255, 0.1);
   }
 
   .timer input:focus {

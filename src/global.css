@@ -6,6 +6,7 @@
   --white: white;
   --padding: 30px;
   --padding_sm: 15px;
+  --fast: 0.25s;
 }
 
 html, body {
