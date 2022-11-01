@@ -5,7 +5,7 @@
 
 :root {
   --black: #101820;
-  --gray: #9faec0;
+  --gray: #8a95a2;
   --background: #364352;
   --accent: #f36c53;
   --accent_dark: #cc5945;
@@ -65,6 +65,19 @@ h1 {
 input {
   font-family: 'Inter', 'Helvetica', Tahoma, Geneva, Verdana, sans-serif;
   font-size: 1rem;
+}
+
+input[type=text]::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: var(--gray);
+  opacity: 1; /* Firefox */
+}
+
+input[type=text]:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color: var(--gray);
+}
+
+input[type=text]::-ms-input-placeholder { /* Microsoft Edge */
+  color: var(--gray);
 }
 
 button, .button {

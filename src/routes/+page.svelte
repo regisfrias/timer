@@ -230,7 +230,6 @@
   .timer {
     display: grid;
     grid-template-columns: 3rem 3fr 1fr;
-    grid-column-gap: var(--padding_sm);
     border-bottom: 1px solid #00000024;
   }
 
@@ -243,7 +242,7 @@
     min-width: calc(120px - 1rem);
     line-height: 1;
     margin: 0;
-    padding: 0.5rem;
+    padding: var(--padding_sm);
     border: 1px solid transparent;
     background-color: transparent;
     color: white;
@@ -251,7 +250,7 @@
   }
 
   .timer input:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.05);
   }
 
   .timer input:focus {
@@ -298,7 +297,6 @@
   .total {
     display: grid;
     grid-template-columns: 3rem 3fr 1fr;
-    grid-column-gap: var(--padding_sm);
     border-bottom: 1px solid #00000024;
     border-right: 2px solid var(--gray);
   }
@@ -308,8 +306,8 @@
   }
 
   .total div:first-child {
-    padding-left: 0.5rem;
-    min-width: calc(120px - 0.5rem);
+    padding-left: var(--padding_sm);
+    min-width: calc(120px - var(--padding_sm));
     grid-column-start: 2;
     grid-column-end: 3;
   }
