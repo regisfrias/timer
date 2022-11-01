@@ -115,6 +115,17 @@
     allTimers = {}
   }
 
+  const removeTimer = (evt: Event) => {
+    const target = evt.target as HTMLInputElement
+    const timerDay = target.dataset.timerDay
+    const timerId = target.dataset.timerId ? parseInt(target.dataset.timerId) : null
+    if (timerDay && timerId !== null) {
+      allTimers[timerDay].timers.splice(timerId, 1)
+      updateTotal(timerDay)
+      save()
+    }
+  }
+
   const stopTimer = () => {
     window.clearInterval(interval)
     interval = 0
@@ -190,6 +201,7 @@
                 value={pad(msToTimeObj(timer.diff).secs)}
               >
             </div>
+            <button on:click={removeTimer} data-timer-id={timerId} data-timer-day={thisDay} class="button_clear">x</button>
           </div>
         {/each}
         <div class="total">
@@ -229,7 +241,7 @@
 
   .timer {
     display: grid;
-    grid-template-columns: 3rem 3fr 1fr;
+    grid-template-columns: 3rem 3fr 1fr 0.5fr;
     border-bottom: 1px solid #00000024;
   }
 
@@ -292,7 +304,7 @@
 
   .total {
     display: grid;
-    grid-template-columns: 3rem 3fr 1fr;
+    grid-template-columns: 3rem 3fr 1fr 0.5fr;
     border-bottom: 1px solid #00000024;
     border-right: 2px solid var(--gray);
   }
@@ -328,6 +340,10 @@
     grid-column-gap: var(--padding);
     align-items: stretch;
     background-color: var(--background);
+  }
+
+  .button_clear:hover {
+    background-color: var(--accent);
   }
 
 </style>

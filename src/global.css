@@ -108,3 +108,7 @@ button.active::after, .button.active::after {
   background-color: rgba(0, 0, 0, 0.2);
   color: var(--black);
 }
+
+.button_clear {
+  background-color: transparent;
+}
