@@ -78,7 +78,7 @@
       interval,
     }
 
-    if (allTimers[todaysKey].timers.length === timerId) {
+    if (allTimers[todaysKey] && allTimers[todaysKey].timers.length === timerId) {
       allTimers[todaysKey] = {
         ...allTimers[todaysKey],
         timers: [
@@ -87,15 +87,21 @@
         ]
       }
     } else {
-      const newStart = new Date(start.getTime() - allTimers[todaysKey].timers[timerId].diff)
-      allTimers[todaysKey].timers.splice(timerId, 1, {
-        start: newStart.toISOString(),
-        diff: allTimers[todaysKey].timers[timerId].diff,
-        name: allTimers[todaysKey].timers[timerId].name,
-        interval,
-      })
+      if (allTimers[todaysKey]) {
+        const diff = allTimers[todaysKey].timers[timerId].diff
+        const name = allTimers[todaysKey].timers[timerId].name
+        const newStart = new Date(start.getTime() - diff)
+        allTimers[todaysKey].timers.splice(timerId, 1, {
+          start: newStart.toISOString(),
+          diff,
+          name,
+          interval,
+        })
+      } else {
+        allTimers[todaysKey] = {timers: [newTimer], total: 0, date: today}
+      }
     }
-    
+
     updateDate(todaysKey, timerId)
   }
 
@@ -117,20 +123,20 @@
 
   {#if allTimers && Object.keys(allTimers).length}
     <article class="allTimers">
-      {#each Object.keys(allTimers) as thisDay}
+      {#each Object.keys(allTimers).reverse() as thisDay}
         <h2 class="timers-title">{#if todaysKey === thisDay}<span>Today</span>{/if}<span>{`${today.getDay()}.${today.getMonth()}.${today.getFullYear()}`}</span></h2>
 
         {#each allTimers[thisDay].timers as timer, id}
-          <div style={`border-left: 2px solid ${colors[id % colors.length]}`} class="timer {interval === timer.interval ? 'current' : ''}">
+          <div style={`border-right: 2px solid ${colors[id % colors.length]}`} class="timer {interval === timer.interval ? 'current' : ''}">
+            {#if interval === timer.interval}
+              <button class="play_pause active" data-timer-id={id} on:click={stopTimer}>■</button>
+            {:else}
+              <button style={`background-color: ${colors[id % colors.length]}`} class="play_pause" data-timer-id={id} data-timer-day={thisDay} on:click={startTimer}>►</button>
+            {/if}
             <input class="timer-name" data-timer-id={id} data-timer-day={thisDay} type="text" name="" id="" bind:value={timer.name} on:keyup={onNameChange} placeholder="Timer name" />
             <div class="time">
               {msToTime(timer.diff)}
             </div>
-            {#if interval === timer.interval}
-              <button class="play_pause active" data-timer-id={id} on:click={stopTimer}>■</button>
-            {:else}
-              <button class="play_pause" data-timer-id={id} data-timer-day={thisDay} on:click={startTimer}>►</button>
-            {/if}
           </div>
         {/each}
         <div class="total">
@@ -158,7 +164,7 @@
 
   .timer {
     display: grid;
-    grid-template-columns: 1fr 1fr 3rem;
+    grid-template-columns: 3rem 1fr 1fr;
     grid-column-gap: var(--padding_sm);
     border-bottom: 1px solid #00000024;
   }
@@ -201,16 +207,20 @@
 
   .total {
     display: grid;
-    grid-template-columns: 1fr 1fr 3rem;
+    grid-template-columns: 3rem 1fr 1fr;
     grid-column-gap: var(--padding_sm);
+    border-bottom: 1px solid #00000024;
   }
 
   .total div {
     padding: var(--padding_sm) 0;
   }
+
   .total div:first-child {
     padding-left: 0.5rem;
     min-width: calc(120px - 0.5rem);
+    grid-column-start: 2;
+    grid-column-end: 3;
   }
 
   .footer {

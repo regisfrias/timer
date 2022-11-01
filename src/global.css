@@ -1,4 +1,5 @@
 :root {
+  --black: #222e3b;
   --background: #364352;
   --accent: #f36c53;
   --accent_dark: #cc5945;
@@ -31,5 +32,6 @@ button {
 }
 
 button.active {
-  background-color: var(--accent_dark);
+  background-color: var(--white);
+  color: var(--black);
 }
