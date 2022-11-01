@@ -50,14 +50,18 @@
     }
   })
 
+  const updateTotal = (timerDate: string) => {
+    const total = (allTimers[timerDate].timers as timerType[]).reduce((prev, timer) => prev + timer.diff, 0)
+    allTimers[timerDate].total = total
+  }
+
 	const updateDate = (timerDate: string, timerId: number) => {
     const current = new Date()
     const timer = allTimers[timerDate].timers[timerId]
     const start = new Date(timer.start)
 		const diff = (current.getTime() - start.getTime())
-    const total = (allTimers[timerDate].timers as timerType[]).reduce((prev, timer) => prev + timer.diff, 0)
     allTimers[timerDate].timers[timerId] = {...timer, diff}
-    allTimers[timerDate].total = total
+    updateTotal(timerDate)
     save()
 	}
 
@@ -106,8 +110,6 @@
     updateDate(todaysKey, timerId)
   }
 
-  // const onNameChange = () => localStorage.setItem(`timers`, `${JSON.stringify(allTimers)}`)
-
   const removeAll = () => {
     localStorage.clear()
     allTimers = {}
@@ -122,6 +124,7 @@
     const target = evt.target as HTMLInputElement
     const value = parseInt(target.value)
     const thisDate = new Date(allTimers[thisDay].timers[timerId].diff)
+
     switch (target.name) {
       case 'hrs':
         thisDate.setHours(value)
@@ -135,7 +138,10 @@
       default:
         break;
     }
+
     allTimers[thisDay].timers[timerId].diff = thisDate.getTime()
+
+    updateTotal(thisDay)
     save()
   }
 </script>
@@ -171,7 +177,7 @@
                 type="number"
                 name="mins"
                 id=""
-                max="60"
+                max="59"
                 min="0"
                 value={pad(msToTimeObj(timer.diff).mins)}
               ><span>:</span>
@@ -180,7 +186,7 @@
                 type="number"
                 name="secs"
                 id=""
-                max="60"
+                max="59"
                 min="0"
                 value={pad(msToTimeObj(timer.diff).secs)}
               >
