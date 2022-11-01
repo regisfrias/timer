@@ -127,7 +127,7 @@
 
     switch (target.name) {
       case 'hrs':
-        thisDate.setHours(value)
+        thisDate.setUTCHours(value)
         break;
       case 'mins':
         thisDate.setMinutes(value)
@@ -140,7 +140,6 @@
     }
 
     allTimers[thisDay].timers[timerId].diff = thisDate.getTime()
-
     updateTotal(thisDay)
     save()
   }
