@@ -165,7 +165,7 @@
                 max="24"
                 min="0"
                 value={pad(msToTimeObj(timer.diff).hrs)}
-              >:
+              ><span>:</span>
               <input
                 on:change={evt => onChangeTime(evt, timerId, thisDay)}
                 type="number"
@@ -174,7 +174,7 @@
                 max="60"
                 min="0"
                 value={pad(msToTimeObj(timer.diff).mins)}
-              >:
+              ><span>:</span>
               <input
                 on:change={evt => onChangeTime(evt, timerId, thisDay)}
                 type="number"
@@ -188,8 +188,8 @@
           </div>
         {/each}
         <div class="total">
-          <div>Total</div>
-          <div>{msToTime(allTimers[thisDay].total)}</div>
+          <div><strong>Total</strong></div>
+          <div class="total-time"><strong>{msToTime(allTimers[thisDay].total)}</strong></div>
         </div>
       {/each}
     </article>
@@ -219,7 +219,7 @@
 
   .timer {
     display: grid;
-    grid-template-columns: 3rem 1fr 1fr;
+    grid-template-columns: 3rem 3fr 1fr;
     grid-column-gap: var(--padding_sm);
     border-bottom: 1px solid #00000024;
   }
@@ -227,7 +227,6 @@
   .timer.current {
     background-color: #00000024;
   }
-
   .timer input {
     display: block;
     min-height: 1.6rem;
@@ -252,19 +251,21 @@
 
   .time {
     display: flex;
+    align-items: stretch;
+    margin-right: var(--padding_sm);
+  }
+
+  .time span {
+    display: flex;
     align-items: center;
   }
 
   .time input {
     max-width: 3rem;
-    width: 1rem;
     min-width: 0;
     padding: 0;
     border: 0;
-  }
-
-  .time input:not(:first-child) {
-    margin-left: 1px;
+    text-align: center;
   }
 
   /* Chrome, Safari, Edge, Opera */
@@ -286,9 +287,10 @@
 
   .total {
     display: grid;
-    grid-template-columns: 3rem 1fr 1fr;
+    grid-template-columns: 3rem 3fr 1fr;
     grid-column-gap: var(--padding_sm);
     border-bottom: 1px solid #00000024;
+    border-right: 2px solid var(--gray);
   }
 
   .total div {
@@ -300,6 +302,10 @@
     min-width: calc(120px - 0.5rem);
     grid-column-start: 2;
     grid-column-end: 3;
+  }
+
+  .total-time {
+    margin-right: var(--padding_sm);
   }
 
   .footer {

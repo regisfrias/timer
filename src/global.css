@@ -1,5 +1,11 @@
+@font-face {
+  font-family: 'Inter';
+  src: url('/Inter-VariableFont_slnt,wght.ttf');
+}
+
 :root {
-  --black: #222e3b;
+  --black: #101820;
+  --gray: #9faec0;
   --background: #364352;
   --accent: #f36c53;
   --accent_dark: #cc5945;
@@ -18,11 +24,28 @@ html, body {
 body {
   background-color: var(--background);
   color: white;
-  font-family: 'Helvetica', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Inter', 'Helvetica', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: 200;
+  font-variation-settings: "wght" 200;
+}
+
+strong {
+  font-weight: 500;
+  font-variation-settings: "wght" 500;
 }
 
 main {
   padding: 1px var(--padding) 160px;
+}
+
+h1, h2 {
+  color: var(--accent);
+  font-weight: 100;
+  font-variation-settings: "wght" 100;
+}
+
+h1 {
+  color: var(--white);
 }
 
 .wrapper {
@@ -33,6 +56,11 @@ main {
 .wraper {
   max-width: 600px;
   margin: auto;
+}
+
+input {
+  font-family: 'Inter', 'Helvetica', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 1rem;
 }
 
 button {
