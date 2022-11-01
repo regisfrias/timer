@@ -209,7 +209,7 @@
     </div>
   </div>
   <div class="wrapper">
-    <p><a href="/privacy">Privacy</a></p>
+    <p><a href="/privacy">Privacy</a> <a href="/about">About</a></p>
   </div>
 </footer>
 
