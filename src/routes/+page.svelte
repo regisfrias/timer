@@ -156,7 +156,7 @@
         {#each allTimers[thisDay].timers as timer, timerId}
           <div style={`border-right: 2px solid ${colors[timerId % colors.length]}`} class="timer {interval === timer.interval ? 'current' : ''}">
             {#if interval === timer.interval}
-              <button class="play_pause active" data-timer-id={timerId} on:click={stopTimer}>■</button>
+              <button style={`background-color: ${colors[timerId % colors.length]}`} class="play_pause active" data-timer-id={timerId} on:click={stopTimer}>■</button>
             {:else}
               <button style={`background-color: ${colors[timerId % colors.length]}`} class="play_pause" data-timer-id={timerId} data-timer-day={thisDay} on:click={startTimer}>►</button>
             {/if}
