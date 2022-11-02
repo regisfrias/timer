@@ -1,8 +1,15 @@
+<script lang="ts">
+  import { page } from '$app/stores'
+  let route = $page.routeId?.replace('/', '')
+</script>
+
+<svelte:body class="{route}" />
+
 <nav>
   <ul class="wrapper">
-    <li><a href="/about">About</a></li>
-    <li><a href="/">Timer</a></li>
-    <li><a href="/privacy">Privacy</a></li>
+    <li class={`${route === 'about' ? 'current' : ''}`}><a href="/about">About</a></li>
+    <li class={`${route === '' ? 'current' : ''}`}><a href="/">Timer</a></li>
+    <li class={`${route === 'privacy' ? 'current' : ''}`}><a href="/privacy">Privacy</a></li>
   </ul>
 </nav>
 
@@ -31,5 +38,9 @@
     text-decoration: none;
     text-align: center;
     color: var(--gray);
+  }
+
+  li.current a {
+    color: var(--white);
   }
 </style>
