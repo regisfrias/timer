@@ -4,6 +4,7 @@
 </script>
 <Layout>
   <h1>About</h1>
-  <p>This is just a simple working hour time tracker for my personal use. I created it because I couldn't find any application that suited my needs and/or whose privacy terms I could agree with.</p>
+  <p>This is just a simple working hours time tracker for my personal use. I created it because I couldn't find any application that suited my needs and/or whose privacy terms I could agree with.</p>
+  <p>Feel free to use it. You don't have to worry about data privacy because <a href="/privacy">it stores everything locally</a>.</p>
   <p>You can find out more about me <a href="https://regisfrias.com/">here</a>.</p>
 </Layout>

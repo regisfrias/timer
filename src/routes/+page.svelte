@@ -1,6 +1,5 @@
 <script lang="ts">
   import Layout from '../+layout.svelte'
-  // import '../global.css'
   import { onMount } from 'svelte';
   import { msToTime, msToTimeObj, pad } from '../lib/utils'
   const colors = [
