@@ -8,6 +8,7 @@
   --gray: #8a95a2;
   --background: #364352;
   --background_light: #3d4b5c;
+  --background_dark: #2b3846;
   --accent: #f36c53;
   --accent_dark: #cc5945;
   --white: white;
@@ -44,10 +45,6 @@ strong {
   font-variation-settings: "wght" 500;
 }
 
-main {
-  padding: 1px var(--padding) 160px;
-}
-
 h1, h2 {
   color: var(--accent);
   font-weight: 100;
@@ -56,16 +53,17 @@ h1, h2 {
 
 h1 {
   color: var(--white);
+  text-align: center;
 }
 
 .wrapper {
+  padding: 1px var(--padding);
   max-width: 500px;
   margin: auto;
 }
 
-.wraper {
-  max-width: 600px;
-  margin: auto;
+main.wrapper {
+  margin-bottom: 50px;
 }
 
 input {

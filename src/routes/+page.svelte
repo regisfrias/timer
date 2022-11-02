@@ -1,5 +1,6 @@
 <script lang="ts">
-  import '../global.css'
+  import Layout from '../+layout.svelte'
+  // import '../global.css'
   import { onMount } from 'svelte';
   import { msToTime, msToTimeObj, pad } from '../lib/utils'
   const colors = [
@@ -156,7 +157,7 @@
   }
 </script>
 
-<main class="wrapper">
+<Layout>
   <h1>Working Hours Timer</h1>
 
   {#if allTimers && Object.keys(allTimers).length}
@@ -211,25 +212,14 @@
       {/each}
     </article>
   {/if}
-</main>
 
-<footer class="footer">
-  <div class="wrapper">
-    <div class="buttons">
-      <button on:click={startTimer} data-timer-id={allTimers[todaysKey] && allTimers[todaysKey].timers ? Object.keys(allTimers[todaysKey].timers).length : 0} data-timer-day={todaysKey}>Start new timer</button>
-      <button on:click={removeAll}>Delete all</button>
-    </div>
-  </div>
-  <div class="wrapper">
-    <p><a href="/privacy">Privacy</a> <a href="/about">About</a></p>
-  </div>
-</footer>
+  <controls class="controls">
+    <button on:click={startTimer} data-timer-id={allTimers[todaysKey] && allTimers[todaysKey].timers ? Object.keys(allTimers[todaysKey].timers).length : 0} data-timer-day={todaysKey}>Start new timer</button>
+    <button on:click={removeAll}>Delete all</button>
+  </controls>
+</Layout>
 
 <style>
-  h1 {
-    text-align: center;
-  }
-
   .allTimers {
     max-width: 100%;
   }
@@ -242,11 +232,11 @@
   .timer {
     display: grid;
     grid-template-columns: 3rem 3fr 1fr 0.5fr;
-    border-bottom: 1px solid #00000024;
+    border-bottom: 1px solid var(--background_dark);
   }
 
   .timer.current {
-    background-color: #00000024;
+    background-color: var(--background_dark);
   }
   .timer input {
     display: block;
@@ -305,7 +295,7 @@
   .total {
     display: grid;
     grid-template-columns: 3rem 3fr 1fr 0.5fr;
-    border-bottom: 1px solid #00000024;
+    border-bottom: 1px solid var(--background_dark);
     border-right: 2px solid var(--gray);
   }
 
@@ -324,22 +314,11 @@
     margin-right: var(--padding_sm);
   }
 
-  .footer {
-    position: fixed;
-    bottom: 0;
-    text-align: center;
-    box-shadow: 1px -1px 24px 0px rgba(0,0,0,0.2);
-    padding: var(--padding) var(--padding) var(--padding_sm);
-    width: calc(100% - var(--padding) * 2);
-    -webkit-box-shadow: 1px -1px 24px 0px rgba(0,0,0,0.2);
-    -moz-box-shadow: 1px -1px 24px 0px rgba(0,0,0,0.2);
-  }
-  .footer .wrapper .buttons {
+  .controls {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-column-gap: var(--padding);
-    align-items: stretch;
-    background-color: var(--background);
+    margin: var(--padding) 0;
   }
 
   .button_clear:hover {
