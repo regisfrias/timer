@@ -21,6 +21,7 @@
     diff: number
     name: string
     interval: number
+    playing: boolean
   }
 
   interface timersType {
@@ -42,15 +43,6 @@
 
   const save = () => localStorage.setItem('timers', JSON.stringify(allTimers))
 
-  onMount(() => {
-    if (localStorage.timers) {
-      const timers = JSON.parse(localStorage.timers)
-      if (Object.keys(timers).length) {
-        allTimers = timers
-      }
-    }
-  })
-
   const updateTotal = (timerDate: string) => {
     const total = (allTimers[timerDate].timers as timerType[]).reduce((prev, timer) => prev + timer.diff, 0)
     allTimers[timerDate].total = total
@@ -62,15 +54,24 @@
     const start = new Date(timer.start)
 		const diff = (current.getTime() - start.getTime())
     allTimers[timerDate].timers[timerId] = {...timer, diff}
+    allTimers = allTimers
     updateTotal(timerDate)
     save()
 	}
 
-  const startTimer = (evt: Event) => {
+  const startTimer = (evt: Event | {target: {dataset: {timerId: string, timerDay: string}}}) => {
     const target = evt.target as HTMLInputElement
     const timerId = target.dataset.timerId ? parseInt(target.dataset.timerId) : 0
     const todaysKey = target.dataset.timerDay || ''
     const start = new Date()
+
+    Object.keys(allTimers).map( dateId => {
+      allTimers[dateId].timers.map( (_t, key) => {
+        if (!(dateId === todaysKey && timerId === key)) {
+          allTimers[dateId].timers[key].playing = false
+        }
+      })
+    })
 
     if (interval) {
       window.clearInterval(interval);
@@ -82,6 +83,7 @@
       diff: 0,
       name: '',
       interval,
+      playing: true,
     }
 
     if (allTimers[todaysKey] && allTimers[todaysKey].timers.length === timerId) {
@@ -102,6 +104,7 @@
           diff,
           name,
           interval,
+          playing: true,
         })
       } else {
         allTimers[todaysKey] = {timers: [newTimer], total: 0, date: today}
@@ -111,15 +114,36 @@
     updateDate(todaysKey, timerId)
   }
 
+  onMount(() => {
+    if (localStorage.timers) {
+      const timers: timersType = JSON.parse(localStorage.timers)
+      if (Object.keys(timers).length) {
+        allTimers = timers
+        Object.keys(timers).forEach(timer => {
+          timers[timer].timers.forEach( (t, timerId) => {
+            if (t.playing === true) {
+              startTimer({target: {dataset: {timerId: timerId.toString(), timerDay: timer.toString()}}})
+            }
+          })
+        })
+      }
+    }
+  })
+
   const removeAll = () => {
     localStorage.clear()
     allTimers = {}
   }
 
-  const removeTimer = (evt: Event) => {
+  const getTimerFromTarget = (evt: Event) => {
     const target = evt.target as HTMLInputElement
     const timerDay = target.dataset.timerDay
     const timerId = target.dataset.timerId ? parseInt(target.dataset.timerId) : null
+    return { timerDay, timerId }
+  }
+
+  const removeTimer = (evt: Event) => {
+    const { timerDay, timerId } = getTimerFromTarget(evt)
     if (timerDay && timerId !== null) {
       allTimers[timerDay].timers.splice(timerId, 1)
       updateTotal(timerDay)
@@ -127,7 +151,14 @@
     }
   }
 
-  const stopTimer = () => {
+  const stopTimer = (evt: Event) => {
+    const { timerDay, timerId } = getTimerFromTarget(evt)
+    if (timerDay && timerId !== null) {
+      const timer = allTimers[timerDay].timers[timerId];
+      timer.playing = false
+      allTimers = allTimers
+      save()
+    }
     window.clearInterval(interval)
     interval = 0
   }
@@ -166,9 +197,9 @@
         {@const date = new Date(allTimers[thisDay].date)}
         <h2 class="timers-title"><span>{#if todaysKey === thisDay}Today{:else}{date.toLocaleString('en-FI', { weekday: 'long',})}{/if}</span><span>{`${date.getDay()}.${date.getMonth()}.${date.getFullYear()}`}</span></h2>
         {#each allTimers[thisDay].timers as timer, timerId}
-          <div style={`border-right: 2px solid ${colors[timerId % colors.length]}`} class="timer {interval === timer.interval ? 'current' : ''}">
-            {#if interval === timer.interval}
-              <button style={`background-color: ${colors[timerId % colors.length]}`} class="play_pause active" data-timer-id={timerId} on:click={stopTimer}>■</button>
+          <div style={`border-right: 2px solid ${colors[timerId % colors.length]}`} class="timer {timer.playing ? 'current' : ''}">
+            {#if timer.playing }
+              <button style={`background-color: ${colors[timerId % colors.length]}`} class="play_pause active" data-timer-id={timerId} data-timer-day={thisDay} on:click={stopTimer}>■</button>
             {:else}
               <button style={`background-color: ${colors[timerId % colors.length]}`} class="play_pause" data-timer-id={timerId} data-timer-day={thisDay} on:click={startTimer}>►</button>
             {/if}
