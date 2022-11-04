@@ -212,6 +212,7 @@
                 max="24"
                 min="0"
                 value={pad(msToTimeObj(timer.diff).hrs)}
+                disabled={timer.playing}
               ><span>:</span>
               <input
                 on:change={evt => onChangeTime(evt, timerId, thisDay)}
@@ -221,6 +222,7 @@
                 max="59"
                 min="0"
                 value={pad(msToTimeObj(timer.diff).mins)}
+                disabled={timer.playing}
               ><span>:</span>
               <input
                 on:change={evt => onChangeTime(evt, timerId, thisDay)}
@@ -230,6 +232,7 @@
                 max="59"
                 min="0"
                 value={pad(msToTimeObj(timer.diff).secs)}
+                disabled={timer.playing}
               >
             </div>
             <button on:click={removeTimer} data-timer-id={timerId} data-timer-day={thisDay} class="button_clear">x</button>
@@ -285,7 +288,7 @@
     transition: background-color var(--fast);
   }
 
-  .timer input:hover, .timer input:focus {
+  .timer input:not(:disabled):hover, .timer input:not(:disabled):focus {
     outline: 0;
     background-color: var(--background_light);
   }
