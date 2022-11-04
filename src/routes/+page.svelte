@@ -239,14 +239,18 @@
           <div><strong>Total</strong></div>
           <div class="total-time"><strong>{msToTime(allTimers[thisDay].total)}</strong></div>
         </div>
+        {#if todaysKey === thisDay}
+        <div class="controls">
+          <button on:click={startTimer} data-timer-id={allTimers[todaysKey] && allTimers[todaysKey].timers ? Object.keys(allTimers[todaysKey].timers).length : 0} data-timer-day={todaysKey}>Start new timer</button>
+        </div>
+        {/if}
       {/each}
     </article>
   {/if}
 
-  <controls class="controls">
-    <button on:click={startTimer} data-timer-id={allTimers[todaysKey] && allTimers[todaysKey].timers ? Object.keys(allTimers[todaysKey].timers).length : 0} data-timer-day={todaysKey}>Start new timer</button>
+  <div class="controls">
     <button on:click={removeAll}>Delete all</button>
-  </controls>
+  </div>
 </Layout>
 
 <style>
@@ -345,10 +349,9 @@
   }
 
   .controls {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-column-gap: var(--padding);
-    margin: var(--padding) 0;
+    margin: var(--padding_sm) 0  var(--padding);
+    text-align: center;
+    width: 100%;
   }
 
   .button_clear:hover {
