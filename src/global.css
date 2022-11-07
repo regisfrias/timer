@@ -93,6 +93,10 @@ button, .button {
   cursor: pointer;
   text-decoration: none;
   position: relative;
+  font-family: 'Inter', 'Helvetica', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 300;
+  font-variation-settings: "wght" 300;
 }
 
 button.active::after, .button.active::after {

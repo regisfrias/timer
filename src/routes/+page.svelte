@@ -47,7 +47,7 @@
     allTimers[timerDate].total = total
   }
 
-	const updateDate = (timerDate: string, timerId: number) => {
+  const updateDate = (timerDate: string, timerId: number) => {
     const current = new Date()
     const timer = allTimers[timerDate].timers[timerId]
     const start = new Date(timer.start)
@@ -185,6 +185,12 @@
     updateTotal(thisDay)
     save()
   }
+
+  const exportData = (evt: Event) => {
+    const target = evt.target as HTMLInputElement
+    target.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(allTimers)))
+    target.setAttribute('download', `${todaysKey}.json`)
+  }
 </script>
 
 <Layout>
@@ -253,6 +259,8 @@
 
   <div class="controls">
     <button on:click={removeAll}>Delete all</button>
+    <!-- svelte-ignore a11y-invalid-attribute -->
+    <a href="#" class="button" on:click={exportData}>Export data</a>
   </div>
 </Layout>
 
