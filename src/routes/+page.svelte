@@ -196,6 +196,10 @@
 <Layout>
   <h1>Working Hours Timer</h1>
 
+  <div class="controls">
+    <button on:click={startTimer} data-timer-id={allTimers[todaysKey] && allTimers[todaysKey].timers ? Object.keys(allTimers[todaysKey].timers).length : 0} data-timer-day={todaysKey}>Start new timer</button>
+  </div>
+
   {#if allTimers && Object.keys(allTimers).length}
     <article class="allTimers">
       {#each Object.keys(allTimers).reverse() as thisDay}
@@ -248,11 +252,6 @@
           <div><strong>Total</strong></div>
           <div class="total-time"><strong>{msToTime(allTimers[thisDay].total)}</strong></div>
         </div>
-        {#if todaysKey === thisDay}
-        <div class="controls">
-          <button on:click={startTimer} data-timer-id={allTimers[todaysKey] && allTimers[todaysKey].timers ? Object.keys(allTimers[todaysKey].timers).length : 0} data-timer-day={todaysKey}>Start new timer</button>
-        </div>
-        {/if}
       {/each}
     </article>
   {/if}
