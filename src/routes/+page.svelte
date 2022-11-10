@@ -60,8 +60,15 @@
 
   const startTimer = (evt: Event | {target: {dataset: {timerId: string, timerDay: string}}}) => {
     const target = evt.target as HTMLInputElement
-    const timerId = target.dataset.timerId ? parseInt(target.dataset.timerId) : 0
-    const todaysKey = target.dataset.timerDay || ''
+    const todaysKey = target.dataset.timerDay || today.toISOString().substring(0, 10)
+    const timerId = target.dataset.timerId
+      ? parseInt(target.dataset.timerId)
+      : (
+        allTimers[todaysKey] && allTimers[todaysKey].timers
+          ? Object.keys(allTimers[todaysKey].timers).length
+          : 0
+      )
+
     const start = new Date()
 
     Object.keys(allTimers).map( dateId => {
@@ -231,7 +238,7 @@
   <h1>Working Hours Timer</h1>
 
   <div class="controls">
-    <button on:click={startTimer} data-timer-id={allTimers[todaysKey] && allTimers[todaysKey].timers ? Object.keys(allTimers[todaysKey].timers).length : 0} data-timer-day={todaysKey}>Start new timer</button>
+    <button on:click={startTimer}>Start new timer</button>
   </div>
 
   {#if allTimers && Object.keys(allTimers).length}
