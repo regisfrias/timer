@@ -245,7 +245,7 @@
     <article class="allTimers">
       {#each Object.keys(allTimers).reverse() as thisDay}
         {@const date = new Date(allTimers[thisDay].date)}
-        <h2 class="timers-title"><span>{#if todaysKey === thisDay}Today{:else}{date.toLocaleString('en-FI', { weekday: 'long',})}{/if}</span><span>{`${date.getDay()}.${date.getMonth()}.${date.getFullYear()}`}</span></h2>
+        <h2 class="timers-title"><span>{#if todaysKey === thisDay}Today{:else}{date.toLocaleString('en-FI', { weekday: 'long',})}{/if}</span><span>{`${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`}</span></h2>
         {#each allTimers[thisDay].timers as timer, timerId}
           <div style={`border-right: 2px solid ${colors[timerId % colors.length]}`} class="timer {timer.playing ? 'current' : ''}">
             {#if timer.playing }
