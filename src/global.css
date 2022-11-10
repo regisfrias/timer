@@ -114,3 +114,38 @@ button.active::after, .button.active::after {
 .button_clear {
   background-color: transparent;
 }
+
+.modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.2);
+  justify-content: center;
+  align-items: center;
+  display: none;
+}
+
+.modal.show {
+  display: flex;
+}
+
+.modal .box {
+  background-color: var(--white);
+  padding: var(--padding);
+  position: relative;
+  color: var(--black);
+}
+
+.modal .box .close {
+  display: block;
+  position: absolute;
+  right: 0;
+  top: 0;
+  line-height: 0.5;
+  padding: var(--padding_sm);
+  color: var(--black);
+  background-color: transparent;
+  cursor: pointer;
+}

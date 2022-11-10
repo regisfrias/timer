@@ -191,6 +191,40 @@
     target.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(allTimers)))
     target.setAttribute('download', `${todaysKey}.json`)
   }
+
+  const showHideModal = (evt: Event) => {
+    evt.preventDefault()
+    const target = evt.target as HTMLInputElement
+    const modalId = target.dataset.modalId
+    if (modalId) {
+      const modal = document.getElementById(modalId)
+      if (modal) {
+        if (target.classList.contains('close')) {
+          modal.classList.remove('show')
+        } else {
+          modal.classList.add('show')
+        }
+      }
+    }
+  }
+
+  const importData = (evt: Event) => {
+    const target = evt.target as HTMLInputElement
+    const files = target.files
+
+    const modal = document.getElementById('file')
+    if (modal) {
+      modal.classList.remove('show')
+    }
+
+    if (files) {
+      const fileContent = files[0].text()
+      fileContent.then(f => {
+        allTimers = JSON.parse(f)
+        save()
+      })
+    }
+  }
 </script>
 
 <Layout>
@@ -260,6 +294,16 @@
     <button on:click={removeAll}>Delete all</button>
     <!-- svelte-ignore a11y-invalid-attribute -->
     <a href="#" class="button" on:click={exportData}>Export data</a>
+    <!-- svelte-ignore a11y-invalid-attribute -->
+    <a href="#" class="button" on:click={showHideModal} data-modal-id="file">Import data</a>
+  </div>
+
+  <div class="modal" id="file">
+    <div class="box">
+      <button on:click={showHideModal} data-modal-id="file" class="close">x</button>
+      <input type="file" on:change={importData}>
+      <p><strong>Warning:</strong> this will override the current data.</p>
+    </div>
   </div>
 </Layout>
 
