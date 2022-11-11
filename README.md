@@ -2,7 +2,7 @@
 
 This is just a simple working hours time tracker for my personal use. I created it because I couldn't find any application that suited my needs and/or whose privacy terms I could agree with.
 
-[Screen shot of the application](screenshot.png)
+![Screen shot of the application](screenshot.png)
 
 ## Developing
 
